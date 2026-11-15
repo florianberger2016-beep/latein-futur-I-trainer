@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Futur-Trainer Latein</title>
+<style>
+:root{--bg:#f6f3ec;--card:#fff;--ink:#1f2328;--mut:#676c73;--line:#e2dccf;--acc:#7a2e2e;--acc2:#a64545;
+--fut:#0d7466;--futbg:#d9f1ec;--impf:#b0500a;--impfbg:#fbe8d6;--ok:#1a7f37;--okbg:#e4f4e8;--bad:#c62828;--badbg:#fdeceb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+.lat{font-family:Georgia,"Times New Roman",serif}
+header{background:var(--acc);color:#fff;padding:14px 18px 10px}
+header h1{margin:0;font-size:22px;font-weight:700;letter-spacing:.2px}
+header h1 span{font-weight:400;opacity:.8;font-size:16px;margin-left:6px}
+.toggles{display:flex;gap:16px;flex-wrap:wrap;margin-top:6px;font-size:14px;opacity:.95}
+.toggles label{cursor:pointer;display:flex;align-items:center;gap:6px}
+nav{display:flex;gap:6px;flex-wrap:wrap;padding:10px 14px;background:#efe9de;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;color:var(--ink)}
+nav button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+nav .st{color:#c9a227;margin-left:4px;letter-spacing:-1px}
+nav button.on .st{color:#ffd95a}
+main{max-width:760px;margin:0 auto;padding:18px 14px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:14px}
+h2{font-size:20px;margin:4px 0 12px}
+h3{font-size:17px;margin:0 0 8px;color:var(--acc)}
+.mut{color:var(--mut)}
+.center{text-align:center}
+.task{margin:0 0 10px;font-weight:600;color:var(--acc)}
+.big{font-size:34px;text-align:center;margin:6px 0 2px}
+.lbl{font-size:13px;text-transform:uppercase;letter-spacing:.6px;color:var(--mut);margin:14px 0 6px}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opts.six{display:grid;grid-template-columns:repeat(3,1fr)}
+.opts.col{flex-direction:column}
+.opt{border:2px solid var(--line);background:#fff;border-radius:10px;padding:10px 14px;font-size:17px;cursor:pointer;color:var(--ink);text-align:left}
+.opt:hover:not(:disabled){border-color:var(--acc2)}
+.opt.sel{border-color:var(--acc);background:#f7eaea}
+.opt.right{border-color:var(--ok);background:var(--okbg)}
+.opt.wrong{border-color:var(--bad);background:var(--badbg)}
+.opt:disabled{cursor:default}
+.opt.lat{font-size:24px;text-align:center;flex:1 1 40%}
+.check,.next,.primary{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:11px 20px;font-size:17px;cursor:pointer;margin-top:14px}
+.check:disabled{opacity:.4;cursor:default}
+.next{display:block;margin-left:auto}
+.link{background:none;border:0;color:var(--acc);text-decoration:underline;cursor:pointer;font-size:15px;padding:6px 0;margin-top:8px}
+.inrow{display:flex;gap:8px;margin-top:14px}
+.inrow input{flex:1;font-size:24px;padding:8px 12px;border:2px solid var(--line);border-radius:10px;min-width:0}
+.inrow input:focus{outline:none;border-color:var(--acc)}
+.inrow .check{margin-top:0}
+.fb{border-radius:12px;padding:12px 14px;margin-top:4px;line-height:1.6}
+.fb.ok{background:var(--okbg);border:1px solid #b7e0c2}
+.fb.bad{background:var(--badbg);border:1px solid #f3c2bf}
+.tz{border-radius:4px;padding:0 2px;font-weight:700}
+.tz.fut{background:var(--futbg);color:var(--fut)}
+.tz.impf{background:var(--impfbg);color:var(--impf)}
+.qhead{display:flex;justify-content:space-between;font-size:14px;color:var(--mut);margin-bottom:6px}
+.progress{height:6px;background:var(--line);border-radius:3px;margin-bottom:14px;overflow:hidden}
+.progress div{height:100%;background:var(--acc);transition:width .3s}
+table{border-collapse:collapse;width:100%}
+th,td{padding:6px 8px;border-bottom:1px solid var(--line);text-align:left}
+th{font-size:14px;color:var(--mut);font-weight:600}
+td.lat{font-size:20px}
+.sys{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sysbox{border-radius:10px;padding:12px;background:var(--futbg)}
+.sysbox b.h{display:block;font-size:20px;color:var(--fut);margin-bottom:4px}
+.steps{margin:0;padding-left:22px}
+.steps li{margin-bottom:6px}
+select{font-size:17px;padding:8px;border-radius:8px;border:1px solid var(--line);background:#fff;max-width:100%}
+.sent{font-size:26px;line-height:2;text-align:center;margin:10px 0}
+.tok{cursor:pointer;border-radius:6px;padding:2px 4px;border:2px solid transparent}
+.tok:hover{border-color:var(--line)}
+.tok.sel{border-color:var(--acc);background:#f7eaea}
+.tok.right{border-color:var(--ok);background:var(--okbg)}
+.tok.wrong{border-color:var(--bad);background:var(--badbg)}
+.tok.miss{border-color:var(--ok);border-style:dashed}
+.stars{font-size:40px;color:#c9a227;text-align:center;letter-spacing:4px}
+.wronglist{padding-left:18px}
+.wronglist li{margin-bottom:10px}
+.intro p{margin:0 0 8px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.tile{border:1px solid var(--line);border-radius:12px;padding:12px;background:#fff;cursor:pointer;text-align:left;font-size:15px;color:var(--ink)}
+.tile:hover{border-color:var(--acc2)}
+.tile b{display:block;font-size:16px;margin-bottom:2px;color:var(--acc)}
+@media(max-width:560px){.sys{grid-template-columns:1fr}.big{font-size:28px}.opts.six{grid-template-columns:repeat(2,1fr)}.sent{font-size:22px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Futur-Trainer <span>Latein · Futur I Aktiv</span></h1>
+  <div class="toggles">
+    <label><input type="checkbox" id="tMac" checked> Längenzeichen (ā, ē …)</label>
+    <label><input type="checkbox" id="tHint" checked> Infinitiv als Hilfe</label>
+  </div>
+</header>
+<nav id="nav"></nav>
+<main id="main"></main>
+<script>
+//DATA-START
+let MAC=true,HINT=true;
+const strip=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'');
+const D=s=>MAC?s:strip(s);
+const norm=s=>strip(s).toLowerCase().replace(/[^a-z]/g,'');
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+
+const PERS=[{k:'1. Sg.',de:'ich',w:'werde'},{k:'2. Sg.',de:'du',w:'wirst'},{k:'3. Sg.',de:'er/sie/es',w:'wird'},
+{k:'1. Pl.',de:'wir',w:'werden'},{k:'2. Pl.',de:'ihr',w:'werdet'},{k:'3. Pl.',de:'sie',w:'werden'}];
+const TN={pres:'Präsens',impf:'Imperfekt',fut:'Futur I'};
+const KONJ={a:'a-Konjugation',e:'e-Konjugation',k:'konsonantischen Konjugation',i:'i-Konjugation',m:'gemischten Konjugation (kons. mit i-Erweiterung)'};
+const SYSNAME={b:'bo-bi-bu',ae:'a / e („kAmEl“)',esse:'eigene Formen (wie erō)'};
+
+const RAW=[
+['amāre','lieben','a','am'],['vocāre','rufen','a','voc'],['laudāre','loben','a','laud'],['clāmāre','schreien','a','clām'],
+['spectāre','betrachten','a','spect'],['portāre','tragen','a','port'],['parāre','vorbereiten','a','par'],['labōrāre','arbeiten','a','labōr'],
+['nārrāre','erzählen','a','nārr'],['exspectāre','erwarten','a','exspect'],
+['monēre','ermahnen','e','mon'],['vidēre','sehen','e','vid'],['tenēre','halten','e','ten'],['timēre','fürchten','e','tim'],
+['habēre','haben','e','hab'],['respondēre','antworten','e','respond'],['docēre','lehren','e','doc'],['manēre','bleiben','e','man'],
+['terrēre','erschrecken','e','terr'],['dēlēre','zerstören','e','dēl'],
+['regere','lenken','k','reg'],['dīcere','sagen','k','dīc'],['legere','lesen','k','leg'],['mittere','schicken','k','mitt'],
+['dūcere','führen','k','dūc'],['scrībere','schreiben','k','scrīb'],['petere','bitten','k','pet'],['pōnere','stellen','k','pōn'],
+['currere','laufen','k','curr'],['quaerere','suchen','k','quaer'],['ostendere','zeigen','k','ostend'],['agere','handeln','k','ag'],
+['vincere','siegen','k','vinc'],['dēfendere','verteidigen','k','dēfend'],
+['audīre','hören','i','aud'],['venīre','kommen','i','ven'],['scīre','wissen','i','sc'],['dormīre','schlafen','i','dorm'],
+['invenīre','finden','i','inven'],['aperīre','öffnen','i','aper'],['pūnīre','bestrafen','i','pūn'],['sentīre','fühlen','i','sent'],
+['capere','fangen','m','cap'],['facere','machen','m','fac'],['fugere','fliehen','m','fug'],['accipere','annehmen','m','accip'],
+['cupere','wünschen','m','cup'],['cōnspicere','erblicken','m','cōnspic'],['iacere','werfen','m','iac'],
+['esse','sein','x','esse'],['īre','gehen','x','ire'],['posse','können','x','posse']];
+
+const END=['m','s','t','mus','tis','nt'],ENDB=['ō','s','t','mus','tis','nt'];
+const IMPF=['ba','bā','ba','bā','bā','ba'],EBA=['ēba','ēbā','ēba','ēbā','ēbā','ēba'],BI=['b','bi','bi','bi','bi','bu'],AE=['a','ē','e','ē','ē','e'];
+const ESSEI=['a','ā','a','ā','ā','a'],ESSEF=['','i','i','i','i','u'];
+const T=(st,tz,en)=>tz.map((t,i)=>[st,t,en[i]]);
+const P=a=>a.map(x=>[x,'','']);
+function build([inf,de,k,s]){
+  let F;
+  if(k==='a')F={pres:P(['ō','ās','at','āmus','ātis','ant'].map(e=>s+e)),impf:T(s+'ā',IMPF,END),fut:T(s+'ā',BI,ENDB)};
+  else if(k==='e')F={pres:P(['eō','ēs','et','ēmus','ētis','ent'].map(e=>s+e)),impf:T(s+'ē',IMPF,END),fut:T(s+'ē',BI,ENDB)};
+  else if(k==='k')F={pres:P(['ō','is','it','imus','itis','unt'].map(e=>s+e)),impf:T(s,EBA,END),fut:T(s,AE,END)};
+  else if(k==='i')F={pres:P(['iō','īs','it','īmus','ītis','iunt'].map(e=>s+e)),impf:T(s+'i',EBA,END),fut:T(s+'i',AE,END)};
+  else if(k==='m')F={pres:P(['iō','is','it','imus','itis','iunt'].map(e=>s+e)),impf:T(s+'i',EBA,END),fut:T(s+'i',AE,END)};
+  else if(s==='esse')F={pres:P(['sum','es','est','sumus','estis','sunt']),impf:T('er',ESSEI,END),fut:T('er',ESSEF,ENDB)};
+  else if(s==='ire')F={pres:P(['eō','īs','it','īmus','ītis','eunt']),impf:T('ī',IMPF,END),fut:T('ī',BI,ENDB)};
+  else F={pres:P(['possum','potes','potest','possumus','potestis','possunt']),impf:T('poter',ESSEI,END),fut:T('poter',ESSEF,ENDB)};
+  return {inf,de,k,s,id:k==='x'?s:inf,F};
+}
+const V=RAW.map(build);
+const form=(v,t,i)=>v.F[t][i].join('');
+const sysOf=v=>(v.k==='a'||v.k==='e'||v.id==='ire')?'b':(v.id==='esse'||v.id==='posse')?'esse':'ae';
+const konjN=v=>v.k==='x'?'unregelmäßigen Verben':KONJ[v.k];
+function seg(v,t,i){const[a,b,c]=v.F[t][i];
+  if(!b)return `<span class="lat">${D(a+c)}</span>`;
+  return `<span class="lat">${D(a)}<span class="tz ${t}">${D(b)}</span>${D(c)}</span>`}
+function why(v,t,i){
+  const sy=sysOf(v);
+  if(t==='fut'){
+    if(v.id==='esse')return 'Futur von esse: erō, eris, erit, erimus, eritis, erunt.';
+    if(v.id==='posse')return 'posse = pot + esse, also Futur: poterō, poteris, poterit …';
+    if(v.id==='ire')return 'īre bildet das Futur wie die a- und e-Konjugation mit <b>bo-bi-bu</b>: ībō, ībis, ībit …';
+    if(sy==='b')return `${D(v.inf)} gehört zur ${konjN(v)}. Futur mit <b>bo-bi-bu</b> (b + Bindevokal).`;
+    let r=`${D(v.inf)} gehört zur ${konjN(v)}. Futur mit <b>a</b> in der 1. Sg., sonst <b>e</b>.`;
+    if(i===0)r+=' Das -am ist hier keine Akkusativ-Endung.';
+    if(i===5)r+=` Merke: Futur auf <b>-ent</b>, Präsens auf -unt (${D(form(v,'pres',5))}).`;
+    if(i===2)r+=` Präsens wäre ${D(form(v,'pres',2))}.`;
+    return r;}
+  if(t==='impf'){
+    let r=`Imperfekt: Tempuszeichen <b>-ba-</b>${['k','i','m'].includes(v.k)?' (hier -ēba-)':''}${(v.id==='esse'||v.id==='posse')?' (bei esse nur -a-: eram)':''}.`;
+    if(sy==='b'&&v.id!=='ire')r+=' Nicht verwechseln: -ba- = Imperfekt, -bo-/-bi-/-bu- = Futur.';
+    return r;}
+  if(v.k==='e')return `Präsens: ${D(v.inf)} gehört zur e-Konjugation. Das e gehört zum Stamm (${D(v.s+'ē')}-), es ist kein Futurzeichen.`;
+  if(['k','i','m'].includes(v.k))return `Präsens: kein Tempuszeichen. Bei der ${konjN(v)} steht im Präsens i bzw. u (${D(form(v,'pres',2))}, ${D(form(v,'pres',5))}), im Futur e (${D(form(v,'fut',2))}, ${D(form(v,'fut',5))}).`;
+  if(v.k==='a')return 'Präsens: kein Tempuszeichen zwischen Stamm und Endung.';
+  return `Präsens von ${D(v.inf)}.`;
+}
+//DATA-END
+
+const SATZ=[
+{la:'Crās amīcī in forum venient.',fut:['venient'],ok:'Morgen werden die Freunde auf das Forum kommen.',no:['Morgen wird der Freund auf das Forum kommen.','Die Freunde kamen auf das Forum.'],note:'venient: venīre (i-Konj.) → Futur mit e, 3. Pl. auf -ent.'},
+{la:'Quīntus epistulam legit; mox respondēbit.',fut:['respondēbit'],ok:'Quintus liest den Brief; bald wird er antworten.',no:['Quintus las den Brief; bald antwortete er.','Quintus liest den Brief; bald werden sie antworten.'],note:'legit: Präsens (kons. Konj. mit i). respondēbit: respondēre (e-Konj.) → bo-bi-bu.'},
+{la:'Hodiē labōrāmus, crās dormiēmus.',fut:['dormiēmus'],ok:'Heute arbeiten wir, morgen werden wir schlafen.',no:['Heute arbeiten wir, morgen werdet ihr schlafen.','Heute arbeiteten wir, morgen schliefen wir.'],note:'labōrāmus: Präsens. dormiēmus: dormīre (i-Konj.) → Futur mit e.'},
+{la:'Mercātor servōs in Graeciam mittet.',fut:['mittet'],ok:'Der Händler wird die Sklaven nach Griechenland schicken.',no:['Der Händler schickte die Sklaven nach Griechenland.','Die Händler werden die Sklaven nach Griechenland schicken.'],note:'mittet: mittere (kons. Konj.) → Futur mit e. Präsens wäre mittit.'},
+{la:'Post cēnam fābulam nārrābō.',fut:['nārrābō'],ok:'Nach dem Essen werde ich eine Geschichte erzählen.',no:['Nach dem Essen erzählte ich eine Geschichte.','Nach dem Essen wirst du eine Geschichte erzählen.'],note:'nārrābō: nārrāre (a-Konj.) → bo-bi-bu. Imperfekt wäre nārrābam.'},
+{la:'Mīlitēs urbem fortiter dēfendent.',fut:['dēfendent'],ok:'Die Soldaten werden die Stadt tapfer verteidigen.',no:['Die Soldaten verteidigten die Stadt tapfer.','Der Soldat wird die Stadt tapfer verteidigen.'],note:'dēfendent: dēfendere (kons. Konj.) → -ent statt -unt.'},
+{la:'Dominus servōs monet: „Nisi labōrābitis, vōs pūniam.“',fut:['labōrābitis','pūniam'],ok:'Der Herr ermahnt die Sklaven: „Wenn ihr nicht arbeitet, werde ich euch bestrafen.“',no:['Der Herr ermahnt die Sklaven: „Wenn du nicht arbeitest, werde ich dich bestrafen.“','Der Herr ermahnt die Sklaven: „Wenn ihr nicht arbeitet, werden wir euch bestrafen.“'],note:'monet: Präsens (e-Konj., das e gehört zum Stamm). labōrābitis: bo-bi-bu. pūniam: pūnīre (i-Konj.) → 1. Sg. mit a. Im deutschen Nebensatz reicht oft das Präsens.'},
+{la:'Tum Rōmānī hostēs vincent et magnam glōriam habēbunt.',fut:['vincent','habēbunt'],ok:'Dann werden die Römer die Feinde besiegen und großen Ruhm haben.',no:['Dann besiegten die Römer die Feinde und hatten großen Ruhm.','Dann wird der Römer den Feind besiegen und großen Ruhm haben.'],note:'vincent: vincere (kons. Konj.) → Futur mit e. habēbunt: habēre (e-Konj.) → bo-bi-bu.'},
+{la:'Crās nōn in lūdō erō, sed in vīllā avī.',fut:['erō'],ok:'Morgen werde ich nicht in der Schule sein, sondern im Landhaus des Großvaters.',no:['Morgen wirst du nicht in der Schule sein, sondern im Landhaus des Großvaters.','Ich war nicht in der Schule, sondern im Landhaus des Großvaters.'],note:'erō: Futur von esse (erō, eris, erit …).'},
+{la:'Iūlia, sī mē audiēs, nōn errābis.',fut:['audiēs','errābis'],ok:'Julia, wenn du auf mich hörst, wirst du dich nicht irren.',no:['Julia, wenn ihr auf mich hört, werdet ihr euch nicht irren.','Julia, als du auf mich hörtest, irrtest du dich nicht.'],note:'audiēs: audīre (i-Konj.) → Futur mit e. errābis: errāre (a-Konj.) → bo-bi-bu.'},
+{la:'Quid faciēs, Mārce? – Statim domum ībō.',fut:['faciēs','ībō'],ok:'Was wirst du tun, Marcus? – Ich werde sofort nach Hause gehen.',no:['Was wird Marcus tun? – Er wird sofort nach Hause gehen.','Was hast du getan, Marcus? – Ich bin sofort nach Hause gegangen.'],note:'faciēs: facere (gemischte Konj.) → Futur mit e. ībō: īre → bo-bi-bu.'},
+{la:'Hostēs nōs nōn capient, nam fugere poterimus.',fut:['capient','poterimus'],ok:'Die Feinde werden uns nicht fangen, denn wir werden fliehen können.',no:['Die Feinde fingen uns nicht, denn wir konnten fliehen.','Der Feind wird uns nicht fangen, denn ihr werdet fliehen können.'],note:'capient: capere (gemischte Konj.) → -ent. poterimus: posse = pot + erimus. fugere ist ein Infinitiv.'}];
+
+const ST=[{id:'regel',n:'Regel & Formen'},{id:'system',n:'1 · Welches Futur?'},{id:'tempus',n:'2 · Tempus bestimmen'},
+{id:'finde',n:'3 · Finde das Futur'},{id:'bilden',n:'4 · Futur bilden'},{id:'satz',n:'5 · Im Satz'},{id:'test',n:'Abschlusstest'}];
+const PRAISE=['Richtig!','Genau!','Sehr gut!','Stimmt!','Perfekt!'];
+let best={};try{best=JSON.parse(localStorage.getItem('futurTrainer.v1')||'{}')}catch(e){}
+const saveBest=()=>{try{localStorage.setItem('futurTrainer.v1',JSON.stringify(best))}catch(e){}};
+const $=s=>document.querySelector(s);
+let VIEW='start',R=null;
+
+const pickV=f=>rnd(V.filter(f));
+const KIM=v=>['k','i','m'].includes(v.k);
+function genTempus(){
+  const r=Math.random(),t=r<.5?'fut':r<.75?'pres':'impf';
+  let v;
+  if(t==='fut')v=Math.random()<.6?pickV(KIM):rnd(V);
+  else if(t==='pres')v=Math.random()<.7?pickV(x=>x.k==='e'||KIM(x)):rnd(V);
+  else v=Math.random()<.6?pickV(x=>x.k==='a'||x.k==='e'):rnd(V);
+  return {type:'tempus',v,t,i:Math.floor(Math.random()*6)};
+}
+function genFinde(){
+  const fv=Math.random()<.6?pickV(KIM):rnd(V);
+  const opts=[{v:fv,t:'fut',i:Math.floor(Math.random()*6)}];
+  const seen=new Set([form(fv,'fut',opts[0].i)]);
+  let guard=0;
+  while(opts.length<4&&guard++<200){
+    const r=Math.random();let o;
+    if(r<.35)o={v:pickV(x=>x.k==='e'),t:'pres',i:rnd([2,3,4,5])};
+    else if(r<.65)o={v:pickV(KIM),t:'pres',i:rnd([2,5,4])};
+    else o={v:pickV(x=>x.k==='a'||x.k==='e'),t:'impf',i:Math.floor(Math.random()*6)};
+    const f=form(o.v,o.t,o.i);if(!seen.has(f)){seen.add(f);opts.push(o)}
+  }
+  return {type:'finde',opts:shuffle(opts)};
+}
+function makeItems(st){
+  const n=k=>Array.from({length:k});
+  if(st==='system'){const xs=shuffle(V.filter(v=>v.k!=='x')).slice(0,9);xs.push(rnd(V.filter(v=>v.k==='x')));return shuffle(xs).map(v=>({type:'system',v}))}
+  if(st==='tempus')return n(12).map(genTempus);
+  if(st==='finde')return n(8).map(genFinde);
+  if(st==='bilden')return shuffle(V).slice(0,10).map(v=>({type:'bilden',v,i:Math.floor(Math.random()*6)}));
+  if(st==='satz')return shuffle(SATZ).slice(0,8).map(s=>({type:'satz',s}));
+  return shuffle([...n(4).map(genTempus),...n(4).map(genFinde),...shuffle(V).slice(0,4).map(v=>({type:'bilden',v,i:Math.floor(Math.random()*6)}))]);
+}
+function mk(tag,cls,html){const e=document.createElement(tag);if(cls)e.className=cls;if(html!=null)e.innerHTML=html;return e}
+const lock=box=>box.querySelectorAll('button').forEach(b=>b.disabled=true);
+
+const RENDER={
+system(it,q,done){
+  const v=it.v,s=sysOf(v),keys=['b','ae','esse'];
+  q.innerHTML=`<p class="task">Welches Futur-System hat dieses Verb?</p><div class="big lat">${D(v.inf)}, ${D(form(v,'pres',0))}</div><div class="mut center">${v.de}</div><div class="opts col" style="margin-top:14px"></div>`;
+  const o=q.querySelector('.opts');
+  keys.forEach(k=>{const b=mk('button','opt',SYSNAME[k]);b.onclick=()=>{lock(o);if(k!==s)b.classList.add('wrong');o.children[keys.indexOf(s)].classList.add('right');
+    done(k===s,`${D(v.inf)} gehört zu den ${v.k==='x'?'unregelmäßigen Verben':'Verben der '+konjN(v)} → <b>${SYSNAME[s]}</b>. Futur: ${[0,1,2,5].map(i=>seg(v,'fut',i)).join(', ')}`)};o.appendChild(b)});
+},
+tempus(it,q,done){
+  const{v,t,i}=it;let st=null,sp=null;
+  q.innerHTML=`<p class="task">Bestimme Tempus und Person.</p><div class="big lat">${D(form(v,t,i))}</div>${HINT?`<div class="mut center">von ${D(v.inf)} (${v.de})</div>`:''}
+  <div class="lbl">Tempus</div><div class="opts" id="ot"></div><div class="lbl">Person</div><div class="opts six" id="op"></div><button class="check" disabled>Prüfen</button>`;
+  const ot=q.querySelector('#ot'),op=q.querySelector('#op'),ck=q.querySelector('.check');
+  const upd=()=>ck.disabled=!(st&&sp!=null);
+  ['pres','impf','fut'].forEach(k=>{const b=mk('button','opt',TN[k]);b.dataset.k=k;b.onclick=()=>{st=k;[...ot.children].forEach(x=>x.classList.toggle('sel',x===b));upd()};ot.appendChild(b)});
+  PERS.forEach((p,n)=>{const b=mk('button','opt',`${p.k} <span class="mut">(${p.de})</span>`);b.onclick=()=>{sp=n;[...op.children].forEach(x=>x.classList.toggle('sel',x===b));upd()};op.appendChild(b)});
+  ck.onclick=()=>{ck.disabled=true;lock(ot);lock(op);
+    [...ot.children].forEach(b=>{b.classList.remove('sel');if(b.dataset.k===t)b.classList.add('right');else if(b.dataset.k===st)b.classList.add('wrong')});
+    [...op.children].forEach((b,n)=>{b.classList.remove('sel');if(n===i)b.classList.add('right');else if(n===sp)b.classList.add('wrong')});
+    done(st===t&&sp===i,`${seg(v,t,i)} = <b>${TN[t]}, ${PERS[i].k}</b> von ${D(v.inf)}.<br>${why(v,t,i)}`)};
+},
+finde(it,q,done){
+  q.innerHTML=`<p class="task">Welche Form steht im Futur I?</p><div class="opts"></div>`;
+  const o=q.querySelector('.opts');
+  it.opts.forEach(x=>{const b=mk('button','opt lat',D(form(x.v,x.t,x.i)));b.onclick=()=>{lock(o);
+    it.opts.forEach((y,n)=>{if(y.t==='fut')o.children[n].classList.add('right')});if(x.t!=='fut')b.classList.add('wrong');
+    const lines=it.opts.map(y=>`${seg(y.v,y.t,y.i)}: <b>${TN[y.t]}</b> (${D(y.v.inf)})${(y.t==='fut'||y===x)?'<br><span class="mut">'+why(y.v,y.t,y.i)+'</span>':''}`);
+    done(x.t==='fut',lines.join('<br>'))};o.appendChild(b)});
+},
+bilden(it,q,done){
+  const{v,i}=it,p=PERS[i],ans=form(v,'fut',i);
+  q.innerHTML=`<p class="task">Bilde das Futur I.</p><div class="big lat">${D(v.inf)}</div><div class="center"><b>${p.k}</b> · <span class="mut">„${p.de} ${p.w} ${v.de}“</span></div>
+  <div class="inrow"><input class="lat" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" placeholder="Form eintippen"><button class="check">Prüfen</button></div>
+  <button class="link">Tipp zeigen</button><div class="tip mut"></div>`;
+  const inp=q.querySelector('input'),ck=q.querySelector('.check'),tip=q.querySelector('.link');
+  tip.onclick=()=>{q.querySelector('.tip').innerHTML=sysOf(v)==='esse'?'Denk an das Futur von esse: erō, eris, erit …':(v.id==='ire'?'īre bildet das Futur wie die a- und e-Konjugation → <b>bo-bi-bu</b>.':`${D(v.inf)} gehört zur ${konjN(v)} → <b>${SYSNAME[sysOf(v)]}</b>.`);tip.remove()};
+  const go=()=>{const g=norm(inp.value);if(!g)return;inp.disabled=true;ck.disabled=true;const ok=g===norm(ans);
+    let extra='';if(!ok){for(const t of['pres','impf'])for(let n=0;n<6;n++)if(norm(form(v,t,n))===g)extra=`<br>Deine Form <span class="lat">${D(form(v,t,n))}</span> ist ${TN[t]} (${PERS[n].k}).`;}
+    inp.style.borderColor=ok?'var(--ok)':'var(--bad)';
+    done(ok,`Lösung: ${seg(v,'fut',i)}${extra}<br>${why(v,'fut',i)}`)};
+  ck.onclick=go;inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();go()}};setTimeout(()=>inp.focus(),30);
+},
+satz(it,q,done){
+  const s=it.s,F=new Set(s.fut.map(norm));
+  q.innerHTML=`<p class="task">Schritt 1: Klicke alle Verbformen im Futur I an.</p><div class="sent lat"></div><button class="check" disabled>Prüfen</button><div class="step2"></div>`;
+  const box=q.querySelector('.sent'),ck=q.querySelector('.check');const sel=new Set();
+  s.la.split(' ').forEach((w,n)=>{if(n)box.appendChild(document.createTextNode(' '));
+    if(!norm(w)){box.appendChild(document.createTextNode(w));return}
+    const t=mk('span','tok',D(w));t.dataset.n=norm(w);
+    t.onclick=()=>{if(ck.dataset.done)return;t.classList.toggle('sel');t.classList.contains('sel')?sel.add(t):sel.delete(t);ck.disabled=!sel.size};box.appendChild(t)});
+  ck.onclick=()=>{ck.dataset.done=1;ck.remove();let ok1=true;
+    box.querySelectorAll('.tok').forEach(t=>{const isF=F.has(t.dataset.n),isS=sel.has(t);t.classList.remove('sel');
+      if(isF&&isS)t.classList.add('right');else if(isF){t.classList.add('miss');ok1=false}else if(isS){t.classList.add('wrong');ok1=false}});
+    const s2=q.querySelector('.step2');
+    s2.innerHTML=`<p class="mut" style="margin:6px 0 10px">${ok1?'✓ Futurformen richtig gefunden.':'Die gestrichelt markierten Formen stehen im Futur.'}</p><p class="task">Schritt 2: Welche Übersetzung passt?</p><div class="opts col"></div>`;
+    const o=s2.querySelector('.opts');const all=shuffle([s.ok,...s.no]);
+    all.forEach(tx=>{const b=mk('button','opt',tx);b.onclick=()=>{lock(o);if(tx!==s.ok)b.classList.add('wrong');o.children[all.indexOf(s.ok)].classList.add('right');
+      done(ok1&&tx===s.ok,`${D(s.note)}<br><b>Übersetzung:</b> ${s.ok}`)};o.appendChild(b)});
+  };
+}};
+
+function renderNav(){
+  const nv=$('#nav');nv.innerHTML='';
+  ST.forEach(s=>{const b=mk('button',VIEW===s.id?'on':'',s.n+(best[s.id]!=null?`<span class="st">${'★'.repeat(best[s.id])}${'☆'.repeat(3-best[s.id])}</span>`:''));
+    b.onclick=()=>go(s.id);nv.appendChild(b)});
+}
+function go(id){VIEW=id;R=null;renderNav();window.scrollTo(0,0);
+  if(id==='start')return renderStart();if(id==='regel')return renderRegel();startRound(id)}
+
+function renderStart(){
+  $('#main').innerHTML=`<div class="card intro"><h2>Salvē!</h2><p>Hier trainierst du das <b>Futur I Aktiv</b>: erst verstehen, dann erkennen, dann selbst bilden.</p>
+  <p class="mut">Tipp: Fang mit „Regel &amp; Formen“ an und arbeite dich bis zum Abschlusstest vor. Für jede Station gibt es bis zu drei Sterne.</p></div>
+  <div class="tiles">${ST.map(s=>`<button class="tile" data-id="${s.id}"><b>${s.n}</b>${{regel:'Wie wird das Futur gebaut? Mit Formentabelle zum Nachschauen.',system:'bo-bi-bu oder a/e? Am Infinitiv erkennen.',tempus:'Präsens, Imperfekt oder Futur? Und welche Person?',finde:'Vier Formen, nur eine ist Futur.',bilden:'Futurformen selbst eintippen.',satz:'Futurformen im Satz finden und übersetzen.',test:'Alles gemischt, mit Auswertung.'}[s.id]}</button>`).join('')}</div>`;
+  document.querySelectorAll('.tile').forEach(t=>t.onclick=()=>go(t.dataset.id));
+}
+
+function renderRegel(){
+  const opts=[['a','a-Konjugation'],['e','e-Konjugation'],['k','konsonantische Konjugation'],['i','i-Konjugation'],['m','gemischte Konjugation'],['x','unregelmäßig']]
+    .map(([k,l])=>`<optgroup label="${l}">${V.map((v,n)=>v.k===k?`<option value="${n}">${D(v.inf)} · ${v.de}</option>`:'').join('')}</optgroup>`).join('');
+  $('#main').innerHTML=`
+  <div class="card"><h3>1. So ist eine Verbform gebaut</h3>
+  <p style="margin:0 0 6px">Stamm + <b>Tempuszeichen</b> + Personalendung. Das Tempuszeichen verrät die Zeit.</p>
+  <div class="big lat" style="font-size:28px">${D('amā')}<span class="tz impf">${D('ba')}</span>t &nbsp;·&nbsp; ${D('amā')}<span class="tz fut">bi</span>t &nbsp;·&nbsp; reg<span class="tz fut">e</span>t</div>
+  <p class="mut center" style="margin:0">er liebte · er wird lieben · er wird lenken</p></div>
+
+  <div class="card"><h3>2. Zwei Futur-Systeme</h3>
+  <div class="sys">
+   <div class="sysbox"><b class="h">bo-bi-bu</b>a- und e-Konjugation (und īre)<br><span class="lat">${D('amābō, amābis, amābit, amābimus, amābitis, amābunt')}</span></div>
+   <div class="sysbox"><b class="h">a / e („kAmEl“)</b>kons., i- und gemischte Konjugation<br><span class="lat">${D('regam, regēs, reget, regēmus, regētis, regent')}</span><br><span class="mut" style="font-size:14px">Im Wort kAmEl kommt erst ein A, dann nur noch E: 1. Sg. mit a, alle anderen mit e.</span></div>
+  </div>
+  <p style="margin:10px 0 0"><b>Sonderfälle:</b> <span class="lat">esse → ${D('erō, eris, erit, erimus, eritis, erunt')}</span> · <span class="lat">posse → ${D('poterō, poteris …')}</span> · <span class="lat">īre → ${D('ībō, ībis …')}</span></p></div>
+
+  <div class="card"><h3>3. So erkennst du das Futur</h3><ol class="steps">
+  <li>Personalendung abtrennen: was steht davor?</li>
+  <li><b>-bo-/-bi-/-bu-</b> → Futur. <b>-ba-</b> → Imperfekt.</li>
+  <li><b>e</b> vor der Endung? Dann die Konjugation prüfen:<br>e-Konjugation (<span class="lat">${D('monēre')}</span>) → das e gehört zum Stamm → <b>Präsens</b> (<span class="lat">monet</span>)<br>kons./i-/gemischte Konj. (<span class="lat">regere, ${D('audīre')}, capere</span>) → <b>Futur</b> (<span class="lat">reget, audiet, capiet</span>)</li>
+  <li><b>-unt</b> → Präsens, <b>-ent</b> bei kons./i-/gem. Konj. → Futur (<span class="lat">regunt / regent</span>)</li>
+  <li>Hilfe im Text: Zeitangaben wie <span class="lat">${D('crās')}</span> (morgen), <span class="lat">mox</span> (bald), <span class="lat">posteā</span> (später).</li></ol>
+  <p style="margin:8px 0 0"><b>Deshalb wichtig:</b> Lerne bei jeder Vokabel den Infinitiv mit, sonst weißt du nicht, welches System gilt.</p></div>
+
+  <div class="card"><h3>4. Formen-Explorer</h3><p class="mut" style="margin:0 0 8px">Wähle ein Verb und vergleiche die drei Zeiten. <span class="tz impf">Imperfekt-</span> und <span class="tz fut">Futurzeichen</span> sind farbig markiert.</p>
+  <select id="vs">${opts}</select><div id="tab" style="margin-top:12px;overflow-x:auto"></div></div>
+
+  <div class="card"><h3>5. Übersetzen</h3><p style="margin:0">Futur I = „werden“ + Infinitiv: <span class="lat">${D('vocābit')}</span> „er wird rufen“. Im Deutschen klingt manchmal das Präsens natürlicher: „Morgen kommen die Freunde.“</p></div>
+  <button class="primary" onclick="go('system')">Los geht's mit Station 1 →</button>`;
+  const vs=$('#vs');const draw=()=>{const v=V[+vs.value];
+    $('#tab').innerHTML=`<table><tr><th>Person</th><th>Präsens</th><th>Imperfekt</th><th>Futur I</th></tr>${PERS.map((p,i)=>`<tr><th>${p.k}</th><td class="lat">${seg(v,'pres',i)}</td><td class="lat">${seg(v,'impf',i)}</td><td class="lat">${seg(v,'fut',i)}</td></tr>`).join('')}</table>
+    <p class="mut" style="margin:10px 0 0;font-size:15px">${D(v.inf)} ${v.k==='x'?'ist unregelmäßig':'gehört zur '+konjN(v)} → Futur: <b>${SYSNAME[sysOf(v)]}</b></p>`};
+  vs.onchange=draw;draw();
+}
+
+function startRound(st){R={st,items:makeItems(st),idx:0,score:0,wrong:[]};showItem()}
+function showItem(){
+  const it=R.items[R.idx],name=ST.find(s=>s.id===R.st).n;
+  $('#main').innerHTML=`<div class="qhead"><span>${name} · Aufgabe ${R.idx+1} von ${R.items.length}</span><span>✓ ${R.score}</span></div>
+  <div class="progress"><div style="width:${R.idx/R.items.length*100}%"></div></div><div class="card" id="q"></div><div id="fb"></div>`;
+  RENDER[it.type](it,$('#q'),finish);
+}
+function finish(ok,html){
+  if(ok)R.score++;else R.wrong.push(html);
+  $('#fb').innerHTML=`<div class="fb ${ok?'ok':'bad'}"><b>${ok?rnd(PRAISE):'Noch nicht ganz.'}</b><br>${html}</div><button class="next">${R.idx+1<R.items.length?'Weiter →':'Auswertung →'}</button>`;
+  const nb=$('.next');nb.onclick=()=>{R.idx++;R.idx<R.items.length?showItem():summary()};
+  setTimeout(()=>nb.focus({preventScroll:true}),30);
+  $('#fb').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function summary(){
+  const n=R.items.length,p=R.score/n,stars=p>=.9?3:p>=.7?2:p>=.5?1:0;
+  if(best[R.st]==null||stars>best[R.st]){best[R.st]=stars;saveBest()}
+  renderNav();
+  const idx=ST.findIndex(s=>s.id===R.st),nx=ST[idx+1];
+  $('#main').innerHTML=`<div class="card center"><h2>${R.score} von ${n} richtig</h2><div class="stars">${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</div>
+  <p>${stars===3?'Optimē! Das sitzt.':stars===2?'Gut gemacht! Ein, zwei Dinge noch anschauen.':'Schau dir die Regel nochmal an und versuch es erneut.'}</p>
+  <button class="primary" id="again">Nochmal</button> ${nx?`<button class="primary" id="nxt" style="background:#555">Weiter: ${nx.n}</button>`:''}</div>
+  ${R.wrong.length?`<div class="card"><h3>Das solltest du nochmal anschauen</h3><ul class="wronglist">${R.wrong.map(w=>`<li>${w}</li>`).join('')}</ul></div>`:''}`;
+  const st=R.st;$('#again').onclick=()=>go(st);if(nx)$('#nxt').onclick=()=>go(nx.id);
+}
+$('#tMac').onchange=e=>{MAC=e.target.checked;if(VIEW==='regel')renderRegel()};
+$('#tHint').onchange=e=>{HINT=e.target.checked};
+go('start');
+</script>
+</body>
+</html>
